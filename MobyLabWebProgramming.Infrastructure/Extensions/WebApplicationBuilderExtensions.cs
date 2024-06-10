@@ -46,7 +46,13 @@ public static class WebApplicationBuilderExtensions
     /// </summary>
     public static WebApplicationBuilder AddCorsConfiguration(this WebApplicationBuilder builder)
     {
-        var corsConfiguration = builder.Configuration.GetSection(nameof(CorsConfiguration)).Get<CorsConfiguration>();
+        var corsConfiguration = builder.Configuration.GetRequiredSection(nameof(CorsConfiguration)).Get<CorsConfiguration>();
+
+        if (corsConfiguration == null)
+        {
+            throw new ApplicationException("The CORS configuration needs to be set!");
+        }
+        
         builder.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(
@@ -102,6 +108,11 @@ public static class WebApplicationBuilderExtensions
             {
                 var jwtConfiguration = builder.Configuration.GetSection(nameof(JwtConfiguration)).Get<JwtConfiguration>(); // Here we use the JWT configuration from the application.json.
 
+                if (jwtConfiguration == null)
+                {
+                    throw new ApplicationException("The JWT configuration needs to be set!");
+                }
+                
                 var key = Encoding.ASCII.GetBytes(jwtConfiguration.Key); // Use configured key to verify the JWT signature.
                 options.TokenValidationParameters = new()
                 {
@@ -129,29 +140,31 @@ public static class WebApplicationBuilderExtensions
     /// </summary>
     public static WebApplicationBuilder AddAuthorizationWithSwagger(this WebApplicationBuilder builder, string application)
     {
+        var securityScheme = new OpenApiSecurityScheme // This is to configure the authorization in the Swagger client so that you may test authorized routes.
+        {
+            BearerFormat = "JWT",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.Http,
+            Scheme = JwtBearerDefaults.AuthenticationScheme,
+            Reference = new()
+            {
+                Id = JwtBearerDefaults.AuthenticationScheme,
+                Type = ReferenceType.SecurityScheme
+            }
+        };
+        
         builder.Services.AddSwaggerGen(c =>
         {
+            c.SupportNonNullableReferenceTypes();
+            c.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
             c.SchemaFilter<SmartEnumSchemaFilter>();
             c.SwaggerDoc("v1", new() { Title = application, Version = "v1" }); // Adds the application name and version, there can be more than one version for the API.
-            c.AddSecurityDefinition("Bearer", new() // This is to configure the authorization in the Swagger client so that you may test authorized routes.
-            {
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer",
-                BearerFormat = "JWT",
-                In = ParameterLocation.Header
-            });
+            c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
             c.AddSecurityRequirement(new()
             {
                 {
-                    new()
-                    {
-                        Reference = new()
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
+                    securityScheme,
                     Array.Empty<string>()
                 }
             });

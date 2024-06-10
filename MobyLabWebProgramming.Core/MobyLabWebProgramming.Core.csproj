@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -11,12 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.SmartEnum" Version="2.1.0" />
-    <PackageReference Include="Ardalis.SmartEnum.EFCore" Version="2.1.0" />
-    <PackageReference Include="Ardalis.SmartEnum.SystemTextJson" Version="2.1.0" />
-    <PackageReference Include="Ardalis.Specification" Version="6.1.0" />
-    <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="6.1.0" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.22" />
+    <PackageReference Include="Ardalis.SmartEnum" Version="8.0.0" />
+    <PackageReference Include="Ardalis.SmartEnum.EFCore" Version="8.0.0" />
+    <PackageReference Include="Ardalis.SmartEnum.SystemTextJson" Version="8.0.0" />
+    <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
+    <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
   </ItemGroup>
 
 </Project>
