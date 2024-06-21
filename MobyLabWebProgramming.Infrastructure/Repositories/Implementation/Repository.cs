@@ -8,14 +8,12 @@ using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 
 namespace MobyLabWebProgramming.Infrastructure.Repositories.Implementation;
 
-public sealed class Repository<TDb> : IRepository<TDb> where TDb : DbContext
+/// <summary>
+/// Inject the database context.
+/// </summary>
+public sealed class Repository<TDb>(TDb dbContext) : IRepository<TDb> where TDb : DbContext
 {
-    /// <summary>
-    /// Inject the database context.
-    /// </summary>
-    public Repository(TDb dbContext) => DbContext = dbContext;
-
-    public TDb DbContext { get; }
+    public TDb DbContext { get; } = dbContext;
 
     public async Task<T?> GetAsync<T>(Guid id, CancellationToken cancellationToken = default) where T : BaseEntity =>
         await DbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id, cancellationToken);

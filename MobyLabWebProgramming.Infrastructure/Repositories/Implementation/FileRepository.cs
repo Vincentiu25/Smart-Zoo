@@ -10,15 +10,9 @@ namespace MobyLabWebProgramming.Infrastructure.Repositories.Implementation;
 
 public class FileRepository : IFileRepository
 {
-    public readonly string FileStoragePath;
+    private readonly string _fileStoragePath;
 
-    public static void CreateIfNotExists(string path)
-    {
-        if (!Directory.Exists(path)) // If the directory path doesn't exist it should be created.
-        {
-            Directory.CreateDirectory(path);
-        }
-    }
+    private static void CreateIfNotExists(string path) => Directory.CreateDirectory(path); // If the directory path doesn't exist it should be created.
 
     /// <summary>
     /// This gets a new unique filename.
@@ -32,15 +26,15 @@ public class FileRepository : IFileRepository
     /// </summary>
     public FileRepository(IOptions<FileStorageConfiguration> fileStorage)
     {
-        FileStoragePath = fileStorage.Value.SavePath;
-        CreateIfNotExists(FileStoragePath); // Create the file storage path if it doesn't exist.
+        _fileStoragePath = fileStorage.Value.SavePath;
+        CreateIfNotExists(_fileStoragePath); // Create the file storage path if it doesn't exist.
     }
 
     public ServiceResponse<FileDTO> GetFile(string filePath, string? replacedFileName = default)
     {
         try
         {
-            var path = Path.Join(FileStoragePath, filePath);
+            var path = Path.Join(_fileStoragePath, filePath);
 
             return File.Exists(path)
                 ? ServiceResponse<FileDTO>.ForSuccess(new(File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read), replacedFileName ?? Path.GetFileName(filePath)))
@@ -56,7 +50,7 @@ public class FileRepository : IFileRepository
     {
         try
         {
-            directoryPath = Path.Join(FileStoragePath, directoryPath);
+            directoryPath = Path.Join(_fileStoragePath, directoryPath);
             var extension = Path.GetExtension(file.FileName);
             var newName = NewFileName(extension);
             CreateIfNotExists(directoryPath);
@@ -78,7 +72,7 @@ public class FileRepository : IFileRepository
     {
         try
         {
-            directoryPath = Path.Join(FileStoragePath, directoryPath);
+            directoryPath = Path.Join(_fileStoragePath, directoryPath);
             var extension = Path.GetExtension(file.FileName);
             var newName = NewFileName(extension);
             CreateIfNotExists(directoryPath);
@@ -99,7 +93,7 @@ public class FileRepository : IFileRepository
     {
         try
         {
-            directoryPath = Path.Join(FileStoragePath, directoryPath);
+            directoryPath = Path.Join(_fileStoragePath, directoryPath);
             var newName = Path.GetRandomFileName() + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + fileExtension;
             CreateIfNotExists(directoryPath);
             var savePath = Path.Combine(directoryPath, newName);
@@ -120,7 +114,7 @@ public class FileRepository : IFileRepository
     {
         try
         {
-            directoryPath = Path.Join(FileStoragePath, directoryPath);
+            directoryPath = Path.Join(_fileStoragePath, directoryPath);
             var newName = Path.GetRandomFileName() + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + fileExtension;
             CreateIfNotExists(directoryPath);
             var savePath = Path.Combine(directoryPath, newName);
@@ -140,7 +134,7 @@ public class FileRepository : IFileRepository
     {
         try
         {
-            filePath = Path.Join(FileStoragePath, filePath);
+            filePath = Path.Join(_fileStoragePath, filePath);
             var extension = Path.GetExtension(file.FileName);
             var currentExtension = Path.GetExtension(filePath);
 
@@ -167,7 +161,7 @@ public class FileRepository : IFileRepository
     {
         try
         {
-            filePath = Path.Join(FileStoragePath, filePath);
+            filePath = Path.Join(_fileStoragePath, filePath);
             var extension = Path.GetExtension(file.FileName);
             var currentExtension = Path.GetExtension(filePath);
 
@@ -193,7 +187,7 @@ public class FileRepository : IFileRepository
     {
         try
         {
-            filePath = Path.Join(FileStoragePath, filePath);
+            filePath = Path.Join(_fileStoragePath, filePath);
             var fileStream = File.Open(filePath, FileMode.Truncate);
 
             fileStream.Write(file);
@@ -211,7 +205,7 @@ public class FileRepository : IFileRepository
     {
         try
         {
-            filePath = Path.Join(FileStoragePath, filePath);
+            filePath = Path.Join(_fileStoragePath, filePath);
             using var fileStream = File.Open(filePath, FileMode.Truncate);
             fileStream.Write(file);
 
@@ -227,7 +221,7 @@ public class FileRepository : IFileRepository
     {
         try
         {
-            filePath = Path.Join(FileStoragePath, filePath);
+            filePath = Path.Join(_fileStoragePath, filePath);
             File.Delete(filePath);
 
             return ServiceResponse.ForSuccess();

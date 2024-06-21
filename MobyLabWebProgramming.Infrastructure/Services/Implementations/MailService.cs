@@ -10,14 +10,13 @@ using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
-public class MailService : IMailService
+/// <summary>
+/// Inject the required service configuration from the application.json or environment variables.
+/// </summary>
+public class MailService(IOptions<MailConfiguration> mailConfiguration) : IMailService
 {
-    private readonly MailConfiguration _mailConfiguration;
+    private readonly MailConfiguration _mailConfiguration = mailConfiguration.Value;
 
-    /// <summary>
-    /// Inject the required service configuration from the application.json or environment variables.
-    /// </summary>
-    public MailService(IOptions<MailConfiguration> mailConfiguration) => _mailConfiguration = mailConfiguration.Value;
 
     public async Task<ServiceResponse> SendMail(string recipientEmail, string subject, string body, bool isHtmlBody = false, 
         string? senderTitle = default, CancellationToken cancellationToken = default)

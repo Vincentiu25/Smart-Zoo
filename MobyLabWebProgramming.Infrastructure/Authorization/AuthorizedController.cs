@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using MobyLabWebProgramming.Core.DataTransferObjects;
+using MobyLabWebProgramming.Core.Handlers;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 
@@ -9,12 +10,10 @@ namespace MobyLabWebProgramming.Infrastructure.Authorization;
 /// <summary>
 /// This abstract class is used as a base class for controllers that need to get current information about the user from the database.
 /// </summary>
-public abstract class AuthorizedController : ControllerBase
+public abstract class AuthorizedController(IUserService userService) : BaseResponseController
 {
     private UserClaims? _userClaims;
-    protected readonly IUserService UserService;
-
-    protected AuthorizedController(IUserService userService) => UserService = userService;
+    protected readonly IUserService UserService = userService;
 
     /// <summary>
     /// This method extracts the claims from the JWT into an object.

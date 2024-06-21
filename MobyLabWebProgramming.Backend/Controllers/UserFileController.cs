@@ -12,22 +12,13 @@ namespace MobyLabWebProgramming.Backend.Controllers;
 
 /// <summary>
 /// This is a controller example to show who to work with files and form data.
+/// Inject the required services through the constructor.
 /// </summary>
 [ApiController] // This attribute specifies for the framework to add functionality to the controller such as binding multipart/form-data.
 [Route("api/[controller]/[action]")] // The Route attribute prefixes the routes/url paths with template provides as a string, the keywords between [] are used to automatically take the controller and method name.
-public class UserFileController : AuthorizedController
+public class UserFileController(IUserService userService, IUserFileService userFileService) : AuthorizedController(userService)
 {
     private const long MaxFileSize = 128 * 1024 * 1024; // Set the maximum size for file requests to 128MB.
-
-    private readonly IUserFileService _userFileService;
-
-    /// <summary>
-    /// Inject the required services through the constructor.
-    /// </summary>
-    public UserFileController(IUserService userService, IUserFileService userFileService) : base(userService)
-    {
-        _userFileService = userFileService;
-    }
 
     /// <summary>
     /// This method implements the Read operation (R from CRUD) on page of user files.
@@ -41,8 +32,8 @@ public class UserFileController : AuthorizedController
         var currentUser = await GetCurrentUser();
 
         return currentUser.Result != null ?
-            this.FromServiceResponse(await _userFileService.GetUserFiles(pagination)) :
-            this.ErrorMessageResult<PagedResponse<UserFileDTO>>(currentUser.Error);
+            FromServiceResponse(await userFileService.GetUserFiles(pagination)) :
+            ErrorMessageResult<PagedResponse<UserFileDTO>>(currentUser.Error);
     }
 
     /// <summary>
@@ -58,8 +49,8 @@ public class UserFileController : AuthorizedController
         var currentUser = await GetCurrentUser();
 
         return currentUser.Result != null ?
-            this.FromServiceResponse(await _userFileService.SaveFile(form, currentUser.Result)) :
-            this.ErrorMessageResult(currentUser.Error);
+            FromServiceResponse(await userFileService.SaveFile(form, currentUser.Result)) :
+            ErrorMessageResult(currentUser.Error);
     }
 
     /// <summary>
@@ -78,10 +69,10 @@ public class UserFileController : AuthorizedController
             return this.ErrorMessageResult(currentUser.Error);
         }
 
-        var file = await _userFileService.GetFileDownload(id);
+        var file = await userFileService.GetFileDownload(id);
 
         return file.Result != null ? 
             File(file.Result.Stream, MediaTypeNames.Application.Octet, file.Result.Name) : // The File method of the controller base returns a response from a stream with the given media type and filename.
-            this.ErrorMessageResult(currentUser.Error);
+            ErrorMessageResult(currentUser.Error);
     }
 }
