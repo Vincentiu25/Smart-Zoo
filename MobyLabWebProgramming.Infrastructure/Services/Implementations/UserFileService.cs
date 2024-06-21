@@ -26,7 +26,7 @@ public class UserFileService(IRepository<WebAppDatabaseContext> repository, IFil
     {
         var result = await repository.PageAsync(pagination, new UserFileProjectionSpec(pagination.Search), cancellationToken);
 
-        return ServiceResponse<PagedResponse<UserFileDTO>>.ForSuccess(result);
+        return ServiceResponse.ForSuccess(result);
     }
 
     public async Task<ServiceResponse> SaveFile(UserFileAddDTO file, UserDTO requestingUser, CancellationToken cancellationToken = default)
@@ -55,6 +55,6 @@ public class UserFileService(IRepository<WebAppDatabaseContext> repository, IFil
 
         return userFile != null ? 
             fileRepository.GetFile(Path.Join(GetFileDirectory(userFile.UserId), userFile.Path), userFile.Name) : 
-            ServiceResponse<FileDTO>.FromError(new(HttpStatusCode.NotFound, "File entry not found!", ErrorCodes.EntityNotFound));
+            ServiceResponse.FromError<FileDTO>(new(HttpStatusCode.NotFound, "File entry not found!", ErrorCodes.EntityNotFound));
     }
 }

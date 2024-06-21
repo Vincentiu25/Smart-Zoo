@@ -24,15 +24,15 @@ public class UserService(IRepository<WebAppDatabaseContext> repository, ILoginSe
         var result = await repository.GetAsync(new UserProjectionSpec(id), cancellationToken); // Get a user using a specification on the repository.
 
         return result != null ? 
-            ServiceResponse<UserDTO>.ForSuccess(result) : 
-            ServiceResponse<UserDTO>.FromError(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
+            ServiceResponse.ForSuccess(result) : 
+            ServiceResponse.FromError<UserDTO>(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
     }
 
     public async Task<ServiceResponse<PagedResponse<UserDTO>>> GetUsers(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default)
     {
         var result = await repository.PageAsync(pagination, new UserProjectionSpec(pagination.Search), cancellationToken); // Use the specification and pagination API to get only some entities from the database.
 
-        return ServiceResponse<PagedResponse<UserDTO>>.ForSuccess(result);
+        return ServiceResponse.ForSuccess(result);
     }
 
     public async Task<ServiceResponse<LoginResponseDTO>> Login(LoginDTO login, CancellationToken cancellationToken = default)
@@ -41,12 +41,12 @@ public class UserService(IRepository<WebAppDatabaseContext> repository, ILoginSe
 
         if (result == null) // Verify if the user is found in the database.
         {
-            return ServiceResponse<LoginResponseDTO>.FromError(CommonErrors.UserNotFound); // Pack the proper error as the response.
+            return ServiceResponse.FromError<LoginResponseDTO>(CommonErrors.UserNotFound); // Pack the proper error as the response.
         }
 
         if (result.Password != login.Password) // Verify if the password hash of the request is the same as the one in the database.
         {
-            return ServiceResponse<LoginResponseDTO>.FromError(new(HttpStatusCode.BadRequest, "Wrong password!", ErrorCodes.WrongPassword));
+            return ServiceResponse.FromError<LoginResponseDTO>(new(HttpStatusCode.BadRequest, "Wrong password!", ErrorCodes.WrongPassword));
         }
 
         var user = new UserDTO
@@ -57,7 +57,7 @@ public class UserService(IRepository<WebAppDatabaseContext> repository, ILoginSe
             Role = result.Role
         };
 
-        return ServiceResponse<LoginResponseDTO>.ForSuccess(new()
+        return ServiceResponse.ForSuccess(new LoginResponseDTO
         {
             User = user,
             Token = loginService.GetToken(user, DateTime.UtcNow, new(7, 0, 0, 0)) // Get a JWT for the user issued now and that expires in 7 days.
@@ -65,7 +65,7 @@ public class UserService(IRepository<WebAppDatabaseContext> repository, ILoginSe
     }
 
     public async Task<ServiceResponse<int>> GetUserCount(CancellationToken cancellationToken = default) => 
-        ServiceResponse<int>.ForSuccess(await repository.GetCountAsync<User>(cancellationToken)); // Get the count of all user entities in the database.
+        ServiceResponse.ForSuccess(await repository.GetCountAsync<User>(cancellationToken)); // Get the count of all user entities in the database.
 
     public async Task<ServiceResponse> AddUser(UserAddDTO user, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {

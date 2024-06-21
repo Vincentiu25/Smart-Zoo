@@ -9,9 +9,9 @@ public class PaginationQueryParams
     /// <summary>
     /// Page is the number of the page.
     /// </summary>
-    public uint Page { get; set; } = 1;
+    public int Page { get; set; } = 1;
     /// <summary>
     /// PageSize is the maximum number of entries on each page.
     /// </summary>
-    public uint PageSize { get; set; } = 10;
+    public int PageSize { get; set; } = 10;
 }

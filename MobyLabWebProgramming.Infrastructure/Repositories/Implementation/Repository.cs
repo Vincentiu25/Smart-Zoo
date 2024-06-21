@@ -125,19 +125,19 @@ public sealed class Repository<TDb>(TDb dbContext) : IRepository<TDb> where TDb 
     public async Task<PagedResponse<T>> PageAsync<T>(PaginationQueryParams pagination, ISpecification<T> spec, CancellationToken cancellationToken = default) where T : BaseEntity =>
         new(pagination.Page,
             pagination.PageSize,
-            (uint)await GetCountAsync(spec, cancellationToken),
+            await GetCountAsync(spec, cancellationToken),
             await new SpecificationEvaluator().GetQuery(DbContext.Set<T>().AsQueryable(), spec)
-                .Skip((int)((pagination.Page - 1) * pagination.PageSize))
-                .Take((int)pagination.PageSize)
+                .Skip((pagination.Page - 1) * pagination.PageSize)
+                .Take(pagination.PageSize)
                 .ToListAsync(cancellationToken)); // Here the limits for the page are computed using skip and limit query statements on the database, the specifications should include an order by,
                                                   // otherwise the results are non-deterministic.
 
     public async Task<PagedResponse<TOut>> PageAsync<T, TOut>(PaginationQueryParams pagination, ISpecification<T, TOut> spec, CancellationToken cancellationToken = default) where T : BaseEntity =>
         new(pagination.Page,
             pagination.PageSize,
-            (uint)await GetCountAsync(spec, cancellationToken),
+            await GetCountAsync(spec, cancellationToken),
             await new SpecificationEvaluator().GetQuery(DbContext.Set<T>().AsQueryable(), spec)
-                .Skip((int)((pagination.Page - 1) * pagination.PageSize))
-                .Take((int)pagination.PageSize)
+                .Skip((pagination.Page - 1) * pagination.PageSize)
+                .Take(pagination.PageSize)
                 .ToListAsync(cancellationToken));
 }

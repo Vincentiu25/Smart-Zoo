@@ -37,12 +37,12 @@ public class FileRepository : IFileRepository
             var path = Path.Join(_fileStoragePath, filePath);
 
             return File.Exists(path)
-                ? ServiceResponse<FileDTO>.ForSuccess(new(File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read), replacedFileName ?? Path.GetFileName(filePath)))
-                : ServiceResponse<FileDTO>.FromError(CommonErrors.FileNotFound);
+                ? ServiceResponse.ForSuccess<FileDTO>(new(File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read), replacedFileName ?? Path.GetFileName(filePath)))
+                : ServiceResponse.FromError<FileDTO>(CommonErrors.FileNotFound);
         }
         catch
         {
-            return ServiceResponse<FileDTO>.FromError(CommonErrors.TechnicalSupport);
+            return ServiceResponse.FromError<FileDTO>(CommonErrors.TechnicalSupport);
         }
     }
 
@@ -60,11 +60,11 @@ public class FileRepository : IFileRepository
             file.CopyTo(fileStream);
             fileStream.Seek(0, SeekOrigin.Begin);
 
-            return ServiceResponse<FileDTO>.ForSuccess(new(fileStream, newName));
+            return ServiceResponse.ForSuccess<FileDTO>(new(fileStream, newName));
         }
         catch
         {
-            return ServiceResponse<FileDTO>.FromError(CommonErrors.TechnicalSupport);
+            return ServiceResponse.FromError<FileDTO>(CommonErrors.TechnicalSupport);
         }
     }
 
@@ -81,11 +81,11 @@ public class FileRepository : IFileRepository
 
             file.CopyTo(fileStream);
 
-            return ServiceResponse<string>.ForSuccess(newName);
+            return ServiceResponse.ForSuccess(newName);
         }
         catch
         {
-            return ServiceResponse<string>.FromError(CommonErrors.TechnicalSupport);
+            return ServiceResponse.FromError<string>(CommonErrors.TechnicalSupport);
         }
     }
 
@@ -102,11 +102,11 @@ public class FileRepository : IFileRepository
             fileStream.Write(file);
             fileStream.Seek(0, SeekOrigin.Begin);
 
-            return ServiceResponse<FileDTO>.ForSuccess(new(fileStream, newName));
+            return ServiceResponse.ForSuccess(new FileDTO(fileStream, newName));
         }
         catch
         {
-            return ServiceResponse<FileDTO>.FromError(CommonErrors.TechnicalSupport);
+            return ServiceResponse.FromError<FileDTO>(CommonErrors.TechnicalSupport);
         }
     }
 
@@ -122,11 +122,11 @@ public class FileRepository : IFileRepository
 
             fileStream.Write(file);
 
-            return ServiceResponse<string>.ForSuccess(newName);
+            return ServiceResponse.ForSuccess(newName);
         }
         catch
         {
-            return ServiceResponse<string>.FromError(CommonErrors.TechnicalSupport);
+            return ServiceResponse.FromError<string>(CommonErrors.TechnicalSupport);
         }
     }
 
@@ -149,11 +149,11 @@ public class FileRepository : IFileRepository
             file.CopyTo(fileStream);
             fileStream.Seek(0, SeekOrigin.Begin);
 
-            return ServiceResponse<FileDTO>.ForSuccess(new(fileStream, Path.GetFileName(filePath)));
+            return ServiceResponse.ForSuccess(new FileDTO(fileStream, Path.GetFileName(filePath)));
         }
         catch
         {
-            return ServiceResponse<FileDTO>.FromError(CommonErrors.TechnicalSupport);
+            return ServiceResponse.FromError<FileDTO>(CommonErrors.TechnicalSupport);
         }
     }
 
@@ -175,11 +175,11 @@ public class FileRepository : IFileRepository
             using var fileStream = File.Open(filePath, FileMode.Truncate);
             file.CopyTo(fileStream);
 
-            return ServiceResponse<string>.ForSuccess(Path.GetFileName(filePath));
+            return ServiceResponse.ForSuccess(Path.GetFileName(filePath));
         }
         catch
         {
-            return ServiceResponse<string>.FromError(CommonErrors.TechnicalSupport);
+            return ServiceResponse.FromError<string>(CommonErrors.TechnicalSupport);
         }
     }
 
@@ -193,11 +193,11 @@ public class FileRepository : IFileRepository
             fileStream.Write(file);
             fileStream.Seek(0, SeekOrigin.Begin);
 
-            return ServiceResponse<FileDTO>.ForSuccess(new(fileStream, Path.GetFileName(filePath)));
+            return ServiceResponse.ForSuccess(new FileDTO(fileStream, Path.GetFileName(filePath)));
         }
         catch
         {
-            return ServiceResponse<FileDTO>.FromError(CommonErrors.TechnicalSupport);
+            return ServiceResponse.FromError<FileDTO>(CommonErrors.TechnicalSupport);
         }
     }
 
@@ -209,11 +209,11 @@ public class FileRepository : IFileRepository
             using var fileStream = File.Open(filePath, FileMode.Truncate);
             fileStream.Write(file);
 
-            return ServiceResponse<string>.ForSuccess(Path.GetFileName(filePath));
+            return ServiceResponse.ForSuccess(Path.GetFileName(filePath));
         }
         catch
         {
-            return ServiceResponse<string>.FromError(CommonErrors.TechnicalSupport);
+            return ServiceResponse.FromError<string>(CommonErrors.TechnicalSupport);
         }
     }
 
