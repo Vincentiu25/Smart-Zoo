@@ -1,6 +1,5 @@
 ﻿using Ardalis.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
-using SmartEnum.EFCore;
 
 namespace MobyLabWebProgramming.Infrastructure.Database;
 
@@ -26,6 +25,5 @@ public sealed class WebAppDatabaseContext : DbContext
         modelBuilder.HasPostgresExtension("unaccent")
             .ApplyAllConfigurationsFromCurrentAssembly(); // Here all the classes that contain implement IEntityTypeConfiguration<T> are searched at runtime
                                                           // such that each entity that needs to be mapped to the database tables is configured accordingly.
-        modelBuilder.ConfigureSmartEnum(); // Add support for smart enums.
     }
 }

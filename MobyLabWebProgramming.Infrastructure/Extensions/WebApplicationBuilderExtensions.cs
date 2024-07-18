@@ -159,7 +159,6 @@ public static class WebApplicationBuilderExtensions
             c.SupportNonNullableReferenceTypes();
             c.UseAllOfToExtendReferenceSchemas();
             c.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
-            c.SchemaFilter<SmartEnumSchemaFilter>();
             c.SwaggerDoc("v1", new() { Title = application, Version = "v1" }); // Adds the application name and version, there can be more than one version for the API.
             c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
             c.AddSecurityRequirement(new()
