@@ -36,7 +36,7 @@ public static class WebApplicationBuilderExtensions
             options.UseNpgsql(builder.Configuration.GetConnectionString("WebAppDatabase"), // This gets the connection string from ConnectionStrings.WebAppDatabase in appsettings.json.
                 o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)
                     .CommandTimeout((int)TimeSpan.FromMinutes(15).TotalSeconds)));
-        builder.Services.AddTransient<IRepository<WebAppDatabaseContext>, Repository<WebAppDatabaseContext>>();
+        builder.Services.AddScoped<IRepository<WebAppDatabaseContext>, Repository<WebAppDatabaseContext>>();
 
         return builder;
     }
@@ -182,11 +182,11 @@ public static class WebApplicationBuilderExtensions
         builder.Services.Configure<FileStorageConfiguration>(builder.Configuration.GetSection(nameof(FileStorageConfiguration)));
         builder.Services.Configure<MailConfiguration>(builder.Configuration.GetSection(nameof(MailConfiguration)));
         builder.Services
-            .AddTransient<IUserService, UserService>()
-            .AddTransient<ILoginService, LoginService>()
-            .AddTransient<IFileRepository, FileRepository>()
-            .AddTransient<IUserFileService, UserFileService>()
-            .AddTransient<IMailService, MailService>();
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<ILoginService, LoginService>()
+            .AddScoped<IFileRepository, FileRepository>()
+            .AddScoped<IUserFileService, UserFileService>()
+            .AddScoped<IMailService, MailService>();
 
         return builder;
     }
