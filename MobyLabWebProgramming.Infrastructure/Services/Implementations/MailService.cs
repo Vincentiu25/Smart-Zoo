@@ -19,7 +19,7 @@ public class MailService(IOptions<MailConfiguration> mailConfiguration) : IMailS
 
 
     public async Task<ServiceResponse> SendMail(string recipientEmail, string subject, string body, bool isHtmlBody = false, 
-        string? senderTitle = default, CancellationToken cancellationToken = default)
+        string? senderTitle = null, CancellationToken cancellationToken = default)
     {
         if (!_mailConfiguration.MailEnable) // If you need only to test and not send emails you can set this variable to false, otherwise it will try to send the emails.
         {

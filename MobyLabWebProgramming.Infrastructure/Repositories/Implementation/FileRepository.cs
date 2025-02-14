@@ -30,7 +30,7 @@ public class FileRepository : IFileRepository
         CreateIfNotExists(_fileStoragePath); // Create the file storage path if it doesn't exist.
     }
 
-    public ServiceResponse<FileDTO> GetFile(string filePath, string? replacedFileName = default)
+    public ServiceResponse<FileDTO> GetFile(string filePath, string? replacedFileName = null)
     {
         try
         {

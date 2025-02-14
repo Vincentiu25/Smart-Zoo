@@ -12,7 +12,7 @@ public class MailConfiguration
     /// <summary>
     /// The mail server where the client needs to connect.
     /// </summary>
-    public string MailHost { get; set; } = default!;
+    public string MailHost { get; set; } = null!;
     /// <summary>
     /// The SMTP port to which to connect.
     /// </summary>
@@ -20,13 +20,13 @@ public class MailConfiguration
     /// <summary>
     /// The email address that sends the emails.
     /// </summary>
-    public string MailAddress { get; set; } = default!;
+    public string MailAddress { get; set; } = null!;
     /// <summary>
     /// The email user credential.
     /// </summary>
-    public string MailUser { get; set; } = default!;
+    public string MailUser { get; set; } = null!;
     /// <summary>
     /// The email password credential.
     /// </summary>
-    public string MailPassword { get; set; } = default!;
+    public string MailPassword { get; set; } = null!;
 }

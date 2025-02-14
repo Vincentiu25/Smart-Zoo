@@ -5,8 +5,8 @@
 /// </summary>
 public class UserFile : BaseEntity
 {
-    public string Path { get; set; } = default!;
-    public string Name { get; set; } = default!;
+    public string Path { get; set; } = null!;
+    public string Name { get; set; } = null!;
     public string? Description { get; set; }
 
     /// <summary>
@@ -17,5 +17,5 @@ public class UserFile : BaseEntity
     /// <summary>
     /// This is a navigation property for the ORM to correlate this entity with the entity that it references via the foreign key.
     /// </summary>
-    public User User { get; set; } = default!;
+    public User User { get; set; } = null!;
 }

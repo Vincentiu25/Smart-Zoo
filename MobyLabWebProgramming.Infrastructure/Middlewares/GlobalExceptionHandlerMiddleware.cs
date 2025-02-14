@@ -9,26 +9,17 @@ namespace MobyLabWebProgramming.Infrastructure.Middlewares;
 /// <summary>
 /// This is the global exception handler/middleware, when a HTTP request arrives it is invoked, if an uncaught exception is caught here it sends a error message back to the client.
 /// </summary>
-public class GlobalExceptionHandlerMiddleware
+public class GlobalExceptionHandlerMiddleware(ILogger<GlobalExceptionHandlerMiddleware> logger, RequestDelegate next)
 {
-    private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger;
-    private readonly RequestDelegate _next;
-
-    public GlobalExceptionHandlerMiddleware(ILogger<GlobalExceptionHandlerMiddleware> logger, RequestDelegate next)
-    {
-        _logger = logger;
-        _next = next;
-    }
-
     public async Task Invoke(HttpContext context)
     {
         try
         {
-            await _next(context); // Here the next middleware is invoked, the last middleware invoked calls the corresponding controller method for the specified route.
+            await next(context); // Here the next middleware is invoked, the last middleware invoked calls the corresponding controller method for the specified route.
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Caught exception in global exception handler!");
+            logger.LogError(ex, "Caught exception in global exception handler!");
 
             var response = context.Response;
             response.ContentType = "application/json";

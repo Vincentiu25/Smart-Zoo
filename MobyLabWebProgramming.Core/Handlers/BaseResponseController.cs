@@ -18,10 +18,10 @@ public abstract class BaseResponseController : ControllerBase
                                                                                                                                 // set the given HTTP status code in the response and will serialize
                                                                                                                                 // the response object.
 
-    protected ActionResult<RequestResponse> ErrorMessageResult(ErrorMessage? errorMessage = default) =>
+    protected ActionResult<RequestResponse> ErrorMessageResult(ErrorMessage? errorMessage = null) =>
         StatusCode((int)(errorMessage?.Status ?? HttpStatusCode.InternalServerError), RequestResponse.FromError(errorMessage));
 
-    protected ActionResult<RequestResponse<T>> ErrorMessageResult<T>(ErrorMessage? errorMessage = default) =>
+    protected ActionResult<RequestResponse<T>> ErrorMessageResult<T>(ErrorMessage? errorMessage = null) =>
         StatusCode((int)(errorMessage?.Status ?? HttpStatusCode.InternalServerError), RequestResponse<T>.FromError(errorMessage));
 
     protected ActionResult<RequestResponse> FromServiceResponse(ServiceResponse response) =>

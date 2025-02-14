@@ -5,5 +5,5 @@
 /// </summary>
 public class CorsConfiguration
 {
-    public string[] Origins { get; set; } = default!;
+    public string[] Origins { get; set; } = null!;
 }

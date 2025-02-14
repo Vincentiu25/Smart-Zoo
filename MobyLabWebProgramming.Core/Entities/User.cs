@@ -7,9 +7,9 @@ namespace MobyLabWebProgramming.Core.Entities;
 /// </summary>
 public class User : BaseEntity
 {
-    public string Name { get; set; } = default!;
-    public string Email { get; set; } = default!;
-    public string Password { get; set; } = default!;
+    public string Name { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string Password { get; set; } = null!;
     public UserRoleEnum Role { get; set; }
 
     /// <summary>
@@ -17,5 +17,5 @@ public class User : BaseEntity
     /// Collection such as this can be used for Many-To-One or Many-To-Many relations.
     /// Note that this field will be null if not explicitly requested via a Include query, also note that the property is used by the ORM, in the database this collection doesn't exist. 
     /// </summary>
-    public ICollection<UserFile> UserFiles { get; set; } = default!;
+    public ICollection<UserFile> UserFiles { get; set; } = null!;
 }

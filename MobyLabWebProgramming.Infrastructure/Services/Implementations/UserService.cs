@@ -114,7 +114,7 @@ public class UserService(IRepository<WebAppDatabaseContext> repository, ILoginSe
         return ServiceResponse.ForSuccess();
     }
 
-    public async Task<ServiceResponse> DeleteUser(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> DeleteUser(Guid id, UserDTO? requestingUser = null, CancellationToken cancellationToken = default)
     {
         if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Id != id) // Verify who can add the user, you can change this however you se fit.
         {

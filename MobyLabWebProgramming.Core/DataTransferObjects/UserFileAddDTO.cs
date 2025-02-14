@@ -7,6 +7,6 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects;
 /// </summary>
 public class UserFileAddDTO
 {
-    public IFormFile File { get; set; } = default!;
+    public IFormFile File { get; set; } = null!;
     public string? Description { get; set; }
 }

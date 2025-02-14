@@ -66,13 +66,13 @@ public class UserFileController(IUserService userService, IUserFileService userF
 
         if (currentUser.Result == null)
         {
-            return this.ErrorMessageResult(currentUser.Error);
+            return ErrorMessageResult(currentUser.Error);
         }
 
         var file = await userFileService.GetFileDownload(id);
 
         return file.Result != null ? 
             File(file.Result.Stream, MediaTypeNames.Application.Octet, file.Result.Name) : // The File method of the controller base returns a response from a stream with the given media type and filename.
-            ErrorMessageResult(currentUser.Error);
+            ErrorMessageResult(file.Error);
     }
 }

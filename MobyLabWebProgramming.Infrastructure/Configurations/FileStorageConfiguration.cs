@@ -6,5 +6,5 @@
 /// </summary>
 public class FileStorageConfiguration
 {
-    public string SavePath { get; set; } = default!;
+    public string SavePath { get; set; } = null!;
 }

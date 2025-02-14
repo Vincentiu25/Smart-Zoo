@@ -11,5 +11,5 @@ public interface IMailService
     /// This method sends a mail using a recipient email, subject and body for the message that can be HTML by isHtmlBody true and it can also add a alias for your sender.
     /// </summary>
     public Task<ServiceResponse> SendMail(string recipientEmail, string subject, string body, bool isHtmlBody = false,
-        string? senderTitle = default, CancellationToken cancellationToken = default);
+        string? senderTitle = null, CancellationToken cancellationToken = default);
 }

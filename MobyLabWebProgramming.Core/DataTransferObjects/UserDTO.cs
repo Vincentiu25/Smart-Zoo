@@ -9,7 +9,7 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects;
 public class UserDTO
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = default!;
-    public string Email { get; set; } = default!;
+    public string Name { get; set; } = null!;
+    public string Email { get; set; } = null!;
     public UserRoleEnum Role { get; set; }
 }
