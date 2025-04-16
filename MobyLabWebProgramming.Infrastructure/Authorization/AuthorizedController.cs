@@ -39,5 +39,19 @@ public abstract class AuthorizedController(IUserService userService) : BaseRespo
     /// <summary>
     /// This method also gets the currently logged user information from the database to provide more information to authorization verifications.
     /// </summary>
-    protected Task<ServiceResponse<UserDTO>> GetCurrentUser() => UserService.GetUser(ExtractClaims().Id);
+    protected async Task<ServiceResponse<UserDTO>> GetCurrentUser()
+    {
+        var claims = ExtractClaims();
+        
+        var userResult = await UserService.GetUserWithoutPermissions(claims.Id);
+
+        if (userResult.Result != null)
+        {
+            return await UserService.GetUser(claims.Id, userResult.Result);
+        }
+
+        return userResult;
+    }
+
+
 }

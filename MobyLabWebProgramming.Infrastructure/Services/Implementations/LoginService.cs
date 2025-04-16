@@ -22,7 +22,11 @@ public class LoginService(IOptions<JwtConfiguration> jwtConfiguration) : ILoginS
         var key = Encoding.ASCII.GetBytes(_jwtConfiguration.Key); // Use the configured key as the encryption key to sing the JWT.
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new([new(ClaimTypes.NameIdentifier, user.Id.ToString())]), // Set the user ID as the "nameid" claim in the JWT.
+            Subject = new ClaimsIdentity(
+                new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) },
+                "CustomAuth"
+            ),
+
             Claims = new Dictionary<string, object> // Add any other claims in the JWT, you can even add custom claims if you want.
             {
                 { ClaimTypes.Name, user.Name },

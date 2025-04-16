@@ -7,7 +7,8 @@ using MobyLabWebProgramming.Core.Errors;
 namespace MobyLabWebProgramming.Infrastructure.Middlewares;
 
 /// <summary>
-/// This is the global exception handler/middleware, when a HTTP request arrives it is invoked, if an uncaught exception is caught here it sends a error message back to the client.
+/// This is the global exception handler/middleware, when a HTTP request arrives it is invoked,
+/// if an uncaught exception is caught here it sends a error message back to the client.
 /// </summary>
 public class GlobalExceptionHandlerMiddleware(ILogger<GlobalExceptionHandlerMiddleware> logger, RequestDelegate next)
 {
@@ -24,16 +25,39 @@ public class GlobalExceptionHandlerMiddleware(ILogger<GlobalExceptionHandlerMidd
             var response = context.Response;
             response.ContentType = "application/json";
 
-            if (ex is ServerException serverException)
+            HttpStatusCode status;
+            string message;
+
+            switch (ex)
             {
-                response.StatusCode = (int)serverException.Status;
-                await response.WriteAsync(JsonSerializer.Serialize(ErrorMessage.FromException(serverException)));
+                case ServerException serverException:
+                    status = serverException.Status;
+                    message = serverException.Message;
+                    break;
+
+                case ArgumentNullException or ArgumentException:
+                    status = HttpStatusCode.BadRequest;
+                    message = ex.Message;
+                    break;
+
+                case KeyNotFoundException:
+                    status = HttpStatusCode.NotFound;
+                    message = ex.Message;
+                    break;
+
+                case UnauthorizedAccessException:
+                    status = HttpStatusCode.Unauthorized;
+                    message = ex.Message;
+                    break;
+
+                default:
+                    status = HttpStatusCode.InternalServerError;
+                    message = "An unexpected error occurred!";
+                    break;
             }
-            else
-            {
-                response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                await response.WriteAsync(JsonSerializer.Serialize(new ErrorMessage(HttpStatusCode.InternalServerError, "A unexpected error occurred!")));
-            }
+
+            response.StatusCode = (int)status;
+            await response.WriteAsync(JsonSerializer.Serialize(new ErrorMessage(status, message)));
         }
     }
 }

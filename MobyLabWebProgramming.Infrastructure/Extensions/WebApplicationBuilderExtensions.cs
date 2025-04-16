@@ -186,10 +186,22 @@ public static class WebApplicationBuilderExtensions
             .AddScoped<ILoginService, LoginService>()
             .AddScoped<IFileRepository, FileRepository>()
             .AddScoped<IUserFileService, UserFileService>()
-            .AddScoped<IMailService, MailService>();
+            .AddScoped<IMailService, MailService>()
+            
+            // Adaugă această linie:
+            .AddScoped<IZooAnimalService, ZooAnimalService>()
+            .AddScoped<ISpeciesService, SpeciesService>()
+            .AddScoped<IProfessionService, ProfessionService>()
+            .AddScoped<IEmployeeService, EmployeeService>()
+            .AddScoped<IEmployeeProfileService, EmployeeProfileService>()
+            .AddScoped<IEmployeeZooAnimalService, EmployeeZooAnimalService>();
+            
+
+
 
         return builder;
     }
+
 
     /// <summary>
     /// This extension method adds the advanced logging configuration to the application builder.

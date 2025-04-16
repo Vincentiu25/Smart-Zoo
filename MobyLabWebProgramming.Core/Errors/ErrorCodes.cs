@@ -17,5 +17,11 @@ public enum ErrorCodes
     CannotAdd,
     CannotUpdate,
     CannotDelete,
-    MailSendFailed
+    MailSendFailed,
+
+    ZooAnimalNotFound = 1001,
+
+    CannotRead = 1002,
+
+
 }
