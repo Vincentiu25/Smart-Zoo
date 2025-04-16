@@ -70,20 +70,15 @@ public async Task<ServiceResponse<PagedResponse<UserDTO>>> GetUsers(
     public async Task<ServiceResponse<LoginResponseDTO>> Login(LoginDTO login, CancellationToken cancellationToken = default)
     {
         var result = await repository.GetAsync(new UserSpec(login.Email), cancellationToken);
-        File.WriteAllText("test-login.txt", $"Email: {login.Email}, Parola: {login.Password}, Ora: {DateTime.Now}");
 
         if (result == null)
         {
-            logger.LogWarning("[LOGIN] User not found for email: {Email}", login.Email);
             return ServiceResponse.FromError<LoginResponseDTO>(CommonErrors.UserNotFound);
         }
 
-        File.AppendAllText("login-debug.txt",
-            $"Comparing '{login.Password}' with '{result.Password}' at {DateTime.Now}\n");
 
         if (result.Password != login.Password)
         {
-            logger.LogWarning("[LOGIN] Parola nu se potrivește pentru userul {Email}", login.Email);
             return ServiceResponse.FromError<LoginResponseDTO>(
                 new(HttpStatusCode.BadRequest, "Wrong password!", ErrorCodes.WrongPassword)
             );
@@ -97,7 +92,6 @@ public async Task<ServiceResponse<PagedResponse<UserDTO>>> GetUsers(
             Role = result.Role
         };
 
-        logger.LogInformation("[LOGIN] Autentificare reușită pentru: {Email}", user.Email);
 
         return ServiceResponse.ForSuccess(new LoginResponseDTO
         {
